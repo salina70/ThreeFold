@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Feedback Nepal — AI Customer Analyzer
 
 A MERN-stack hackathon project. Users browse any listed business and leave a
@@ -144,3 +145,7 @@ pipeline.
   sentiment badge and dashboard numbers update in real time.
 - The logo and palette (deep indigo + marigold) are original, custom-built
   for this brief — no external image assets used.
+=======
+# ThreeFold
+Feedback Nepal is a customer feedback analyzer where business owners see the reviews and knows where to improve for their business growth.
+>>>>>>> ddef8ba9676a6faf8930482b63e029e8dd39483a

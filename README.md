@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Feedback Nepal — AI Customer Feedback Analyzer
 
 A MERN-stack hackathon project. Users browse any listed business and leave a
@@ -10,7 +9,7 @@ keywords, and rating distribution — with zero external API keys required.
 ## Tech stack
 - MongoDB
 - Express
-- React
+- React.js
 - Node.js
 
 ## Project structure
@@ -99,19 +98,33 @@ doesn't need to change.
 - A sortable table of every organization with its review count, unique
   customer count, average rating, and sentiment mix.
 - There's no self-registration path to the admin role — create one through
-  the seed script or directly in MongoDB by setting a user's `role` to
-  `"admin"`.
+  the seed script
 
-### A note on "Google reviews" data
-This project does **not** scrape Google Reviews. Scraping Google's review
-data programmatically violates Google's Terms of Service, and Google's own
-review content isn't something Feedback Nepal has rights to redistribute.
-Instead, `npm run seed` generates realistic, hand-authored demo data across
-**30 business categories** (cafes, restaurants, clinics, gyms, guest houses,
-trekking agencies, and more) with varied ratings, sentiment, and reviewer
-names, so the admin and owner panels are fully populated for a demo without
-depending on any external, ToS-restricted data source. If you later want
-real reviews, the legitimate path is Google's official **Places API**
-(paid, requires an API key and attribution), which is a drop-in data source
-you could wire into the `Business` model without changing the AI analysis
-pipeline.
+
+## API overview
+| Method | Route | Description |
+|---|---|---|
+| POST | /api/auth/register | Create account |
+| POST | /api/auth/login | Log in |
+| GET | /api/businesses | List/search businesses |
+| GET | /api/businesses/categories | Distinct categories |
+| GET | /api/businesses/:id | Business detail |
+| POST | /api/businesses | Create business (auth) |
+| DELETE | /api/businesses/:id | Delete business (owner only) |
+| GET | /api/businesses/mine | Businesses owned by the logged-in user (auth) |
+| GET | /api/reviews/business/:businessId | Reviews for a business |
+| POST | /api/reviews | Submit review (auth, runs AI analysis) |
+| DELETE | /api/reviews/:id | Delete own review, or a review on a business you own (auth) |
+| POST | /api/reviews/:id/reply | Owner replies publicly to a review (auth, owner only) |
+| GET | /api/reviews/owner | All reviews across the logged-in owner's businesses (auth) |
+| GET | /api/reviews/owner/export | CSV export of the owner's reviews (auth) |
+| GET | /api/analytics/:businessId | Full AI dashboard payload |
+| GET | /api/admin/stats | Platform-wide statistics (auth, admin only) |
+
+## Notes for judges / demo tips
+- Seed the database first (`npm run seed`) for an instant, populated demo.
+- Submit a very positive and a very negative review live to show the
+  sentiment badge and dashboard numbers update in real time.
+- The logo and palette (deep indigo + marigold) are original, custom-built
+  for this brief — no external image assets used.
+

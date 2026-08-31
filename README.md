@@ -41,7 +41,7 @@ Demo accounts created by `npm run seed` (all use password `password123`):
 ```bash
 cd frontend
 npm install
-npm start                   # starts React app on http://localhost:3002
+npm start                   # starts React app on http://localhost:3001
 ```
 
 By default the frontend calls `http://localhost:5000/api`. To change that,

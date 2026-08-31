@@ -4,7 +4,7 @@ AI-powered customer feedback analyzer for businesses in Nepal.
 
 ## Live Demo
 
-👉 https://salina70.github.io/ThreeFold/
+👉 http://localhost:3001
 
 ## Tech Stack
 

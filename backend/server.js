@@ -17,9 +17,7 @@ connectDB();
 
 app.use(cors({
   origin: [
-    "http://localhost:3001",
-    "https://three-fold.vercel.app"
-  ],
+    "http://localhost:3001"  ],
   credentials: true
 }));
 

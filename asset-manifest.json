@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/ThreeFold/static/css/main.d0d8fdc7.css",
+    "main.js": "/ThreeFold/static/js/main.f3b741ab.js",
+    "index.html": "/ThreeFold/index.html",
+    "main.d0d8fdc7.css.map": "/ThreeFold/static/css/main.d0d8fdc7.css.map",
+    "main.f3b741ab.js.map": "/ThreeFold/static/js/main.f3b741ab.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d0d8fdc7.css",
+    "static/js/main.f3b741ab.js"
+  ]
+}

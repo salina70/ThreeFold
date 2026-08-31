@@ -26,19 +26,32 @@ export default function Login() {
 
   return (
     <div className="fn-page fn-page-narrow">
-      <h1>Welcome back</h1>
+      <h1>
+        Welcome back to <span className="blue">Feedback Nepal</span>
+      </h1>
       <form onSubmit={handleSubmit} className="fn-form-card">
         <label>Email</label>
-        <input className="fn-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input
+          className="fn-input"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
         <label>Password</label>
-        <input className="fn-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input
+          className="fn-input"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
         {error && <p className="fn-error">{error}</p>}
-        <button className="fn-btn fn-btn-primary" disabled={submitting}>{submitting ? "Logging in..." : "Log in"}</button>
-        <p className="fn-muted">
+        <button className="fn-btn fn-btn-primary" disabled={submitting}>
+          {submitting ? "Logging in..." : "Log in"}
+        </button>
+        <p className="fn-muted mt">
           New here? <Link to="/register">Create an account</Link>
-        </p>
-        <p className="fn-muted fn-fine-print">
-          Demo login: customer@feedbacknepal.com / password123 (after running the seed script)
         </p>
       </form>
     </div>

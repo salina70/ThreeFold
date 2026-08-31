@@ -50,7 +50,7 @@ export default function Register() {
 
         {error && <p className="fn-error">{error}</p>}
         <button className="fn-btn fn-btn-primary" disabled={submitting}>{submitting ? "Creating..." : "Sign up"}</button>
-        <p className="fn-muted">
+        <p className="fn-muted mt">
           Already have an account? <Link to="/login">Log in</Link>
         </p>
       </form>

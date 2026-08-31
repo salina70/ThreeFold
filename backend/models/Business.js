@@ -18,7 +18,7 @@ const businessSchema = new mongoose.Schema(
     },
     topKeywords: [{ type: String }],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 businessSchema.index({ name: "text", category: "text", city: "text" });

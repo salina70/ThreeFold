@@ -11,7 +11,10 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get("/businesses/categories").then((res) => setCategories(res.data)).catch(() => {});
+    api
+      .get("/businesses/categories")
+      .then((res) => setCategories(res.data))
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -34,12 +37,15 @@ export default function Home() {
     <div className="fn-page">
       <section className="fn-hero">
         <h1>
-          Find a business.<br />Tell them how it went.
+          Find a <span className="blue">business</span>
+          <br />
+          Tell them how it went.
         </h1>
         <p>
-          Feedback Nepal reads every review the moment it's submitted &mdash; rating,
-          tone, and the words customers actually used &mdash; so business owners see
-          what's working and what needs fixing, in real time.
+          Feedback Nepal reads every review the moment it's submitted &mdash;
+          rating, tone, and the words customers actually used &mdash; so
+          business owners see what's working and what needs fixing, in real
+          time.
         </p>
         <div className="fn-search-row">
           <input
@@ -49,10 +55,16 @@ export default function Home() {
             onChange={(e) => setSearch(e.target.value)}
             className="fn-input fn-search-input"
           />
-          <select value={category} onChange={(e) => setCategory(e.target.value)} className="fn-input">
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="fn-input"
+          >
             <option value="">All categories</option>
             {categories.map((c) => (
-              <option key={c} value={c}>{c}</option>
+              <option key={c} value={c}>
+                {c}
+              </option>
             ))}
           </select>
         </div>
@@ -63,7 +75,9 @@ export default function Home() {
         {!loading && businesses.length === 0 && (
           <div className="fn-empty">
             <p>No businesses match yet.</p>
-            <Link to="/add-business" className="fn-btn fn-btn-primary">List the first one</Link>
+            <Link to="/add-business" className="fn-btn fn-btn-primary">
+              List the first one
+            </Link>
           </div>
         )}
 
@@ -71,11 +85,15 @@ export default function Home() {
           <Link to={`/business/${b._id}`} key={b._id} className="fn-biz-row">
             <div className="fn-biz-row-main">
               <h3>{b.name}</h3>
-              <p className="fn-muted">{b.category} &middot; {b.city || "Nepal"}</p>
+              <p className="fn-muted">
+                {b.category} &middot; {b.city || "Nepal"}
+              </p>
             </div>
             <div className="fn-biz-row-meta">
               <StarRating value={b.avgRating} />
-              <span className="fn-muted">{b.reviewCount} review{b.reviewCount === 1 ? "" : "s"}</span>
+              <span className="fn-muted">
+                {b.reviewCount} review{b.reviewCount === 1 ? "" : "s"}
+              </span>
             </div>
           </Link>
         ))}

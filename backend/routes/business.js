@@ -24,17 +24,23 @@ router.get("/", async (req, res) => {
     const businesses = await Business.find(filter).sort({ createdAt: -1 });
     res.json(businesses);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch businesses", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch businesses", error: err.message });
   }
 });
 
 // GET /api/businesses/mine - businesses owned by the logged-in user (owner panel)
 router.get("/mine", auth, async (req, res) => {
   try {
-    const businesses = await Business.find({ owner: req.user.id }).sort({ createdAt: -1 });
+    const businesses = await Business.find({ owner: req.user.id }).sort({
+      createdAt: -1,
+    });
     res.json(businesses);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch your businesses", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch your businesses", error: err.message });
   }
 });
 
@@ -43,17 +49,22 @@ router.get("/categories", async (req, res) => {
     const categories = await Business.distinct("category");
     res.json(categories);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch categories", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch categories", error: err.message });
   }
 });
 
 router.get("/:id", async (req, res) => {
   try {
     const business = await Business.findById(req.params.id);
-    if (!business) return res.status(404).json({ message: "Business not found" });
+    if (!business)
+      return res.status(404).json({ message: "Business not found" });
     res.json(business);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch business", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch business", error: err.message });
   }
 });
 
@@ -61,7 +72,9 @@ router.post("/", auth, async (req, res) => {
   try {
     const { name, category, description, address, city, phone } = req.body;
     if (!name || !category) {
-      return res.status(400).json({ message: "Name and category are required" });
+      return res
+        .status(400)
+        .json({ message: "Name and category are required" });
     }
 
     const business = await Business.create({
@@ -76,22 +89,29 @@ router.post("/", auth, async (req, res) => {
 
     res.status(201).json(business);
   } catch (err) {
-    res.status(500).json({ message: "Failed to create business", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to create business", error: err.message });
   }
 });
 
 router.delete("/:id", auth, async (req, res) => {
   try {
     const business = await Business.findById(req.params.id);
-    if (!business) return res.status(404).json({ message: "Business not found" });
+    if (!business)
+      return res.status(404).json({ message: "Business not found" });
     if (String(business.owner) !== req.user.id) {
-      return res.status(403).json({ message: "Only the owner can delete this business" });
+      return res
+        .status(403)
+        .json({ message: "Only the owner can delete this business" });
     }
     await Review.deleteMany({ business: business._id });
     await business.deleteOne();
     res.json({ message: "Business deleted" });
   } catch (err) {
-    res.status(500).json({ message: "Failed to delete business", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to delete business", error: err.message });
   }
 });
 

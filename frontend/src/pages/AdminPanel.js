@@ -10,21 +10,50 @@ export default function AdminPanel() {
     api
       .get("/admin/stats")
       .then((res) => setData(res.data))
-      .catch((err) => setError(err.response?.data?.message || "Failed to load admin stats"));
+      .catch((err) =>
+        setError(err.response?.data?.message || "Failed to load admin stats"),
+      );
   }, []);
 
-  if (error) return <div className="fn-page"><p className="fn-error">{error}</p></div>;
-  if (!data) return <div className="fn-page"><p className="fn-muted">Loading platform stats...</p></div>;
+  if (error)
+    return (
+      <div className="fn-page">
+        <p className="fn-error">{error}</p>
+      </div>
+    );
+  if (!data)
+    return (
+      <div className="fn-page">
+        <p className="fn-muted">Loading platform stats...</p>
+      </div>
+    );
 
-  const { totalOrganizations, totalCustomers, totalOwners, totalFeedback, totalActiveReviewers, platformSentiment, topCategories, organizations } = data;
-  const sentimentTotal = Math.max(1, platformSentiment.positive + platformSentiment.neutral + platformSentiment.negative);
+  const {
+    totalOrganizations,
+    totalCustomers,
+    totalOwners,
+    totalFeedback,
+    totalActiveReviewers,
+    platformSentiment,
+    topCategories,
+    organizations,
+  } = data;
+  const sentimentTotal = Math.max(
+    1,
+    platformSentiment.positive +
+      platformSentiment.neutral +
+      platformSentiment.negative,
+  );
   const categoryMax = Math.max(1, ...topCategories.map((c) => c.count));
 
   return (
     <div className="fn-page">
       <p className="fn-eyebrow-plain">Admin panel</p>
       <h1>Platform overview</h1>
-      <p className="fn-muted">Every organization, customer, and piece of feedback on Feedback Nepal, at a glance.</p>
+      <p className="fn-muted">
+        Every organization, customer, and piece of feedback on Feedback Nepal,
+        at a glance.
+      </p>
 
       <section className="fn-stat-row">
         <div className="fn-stat-card">
@@ -55,12 +84,22 @@ export default function AdminPanel() {
           {[
             { key: "positive", label: "Positive", color: "var(--fn-positive)" },
             { key: "neutral", label: "Neutral", color: "var(--fn-neutral)" },
-            { key: "negative", label: "Needs attention", color: "var(--fn-negative)" },
+            {
+              key: "negative",
+              label: "Needs attention",
+              color: "var(--fn-negative)",
+            },
           ].map((row) => (
             <div className="fn-bar-row" key={row.key}>
               <span className="fn-bar-label">{row.label}</span>
               <div className="fn-bar-track">
-                <div className="fn-bar-fill" style={{ width: `${(platformSentiment[row.key] / sentimentTotal) * 100}%`, background: row.color }} />
+                <div
+                  className="fn-bar-fill"
+                  style={{
+                    width: `${(platformSentiment[row.key] / sentimentTotal) * 100}%`,
+                    background: row.color,
+                  }}
+                />
               </div>
               <span className="fn-bar-count">{platformSentiment[row.key]}</span>
             </div>
@@ -75,7 +114,13 @@ export default function AdminPanel() {
             <div className="fn-bar-row" key={c.category}>
               <span className="fn-bar-label">{c.category}</span>
               <div className="fn-bar-track">
-                <div className="fn-bar-fill" style={{ width: `${(c.count / categoryMax) * 100}%`, background: "var(--fn-marigold)" }} />
+                <div
+                  className="fn-bar-fill"
+                  style={{
+                    width: `${(c.count / categoryMax) * 100}%`,
+                    background: "var(--fn-marigold)",
+                  }}
+                />
               </div>
               <span className="fn-bar-count">{c.count}</span>
             </div>
@@ -101,13 +146,18 @@ export default function AdminPanel() {
             <tbody>
               {organizations.map((o) => (
                 <tr key={o._id}>
-                  <td><Link to={`/business/${o._id}`}>{o.name}</Link></td>
+                  <td>
+                    <Link to={`/business/${o._id}`}>{o.name}</Link>
+                  </td>
                   <td className="fn-muted">{o.category}</td>
                   <td className="fn-muted">{o.city}</td>
                   <td>{o.avgRating || "—"}</td>
                   <td>{o.reviewCount}</td>
                   <td>{o.uniqueCustomers}</td>
-                  <td className="fn-muted">{o.sentiment.positive} / {o.sentiment.neutral} / {o.sentiment.negative}</td>
+                  <td className="fn-muted">
+                    {o.sentiment.positive} / {o.sentiment.neutral} /{" "}
+                    {o.sentiment.negative}
+                  </td>
                 </tr>
               ))}
             </tbody>

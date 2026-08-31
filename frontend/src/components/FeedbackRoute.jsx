@@ -11,9 +11,7 @@ export default function FeedbackRoute({ children }) {
   useEffect(() => {
     const checkOwnership = async () => {
       try {
-        const user = JSON.parse(
-          localStorage.getItem("user")
-        );
+        const user = JSON.parse(localStorage.getItem("user"));
 
         // Not logged in
         if (!user) {
@@ -28,28 +26,21 @@ export default function FeedbackRoute({ children }) {
         }
 
         // Owner → check business
-        const res = await api.get(
-          `/businesses/${id}`
-        );
+        const res = await api.get(`/businesses/${id}`);
 
         const business = res.data.business;
 
         // Owner owns this business
         if (
           business.owner &&
-          business.owner.toString() ===
-            user._id.toString()
+          business.owner.toString() === user._id.toString()
         ) {
           setAllowed(false);
         } else {
           setAllowed(true);
         }
-
       } catch (error) {
-        console.error(
-          "Could not check business ownership",
-          error
-        );
+        console.error("Could not check business ownership", error);
 
         setAllowed(false);
       } finally {
@@ -60,7 +51,6 @@ export default function FeedbackRoute({ children }) {
     checkOwnership();
   }, [id]);
 
-
   if (loading) {
     return (
       <div className="fn-page">
@@ -69,16 +59,9 @@ export default function FeedbackRoute({ children }) {
     );
   }
 
-
   if (!allowed) {
-    return (
-      <Navigate
-        to={`/business/${id}`}
-        replace
-      />
-    );
+    return <Navigate to={`/business/${id}`} replace />;
   }
-
 
   return children;
 }

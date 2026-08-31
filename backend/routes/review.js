@@ -9,7 +9,9 @@ const router = express.Router();
 // GET /api/reviews/owner - every review across every business the logged-in owner runs
 router.get("/owner", auth, async (req, res) => {
   try {
-    const businesses = await Business.find({ owner: req.user.id }).select("_id name");
+    const businesses = await Business.find({ owner: req.user.id }).select(
+      "_id name",
+    );
     const businessIds = businesses.map((b) => b._id);
     const businessNameById = {};
     businesses.forEach((b) => (businessNameById[b._id.toString()] = b.name));
@@ -25,14 +27,18 @@ router.get("/owner", auth, async (req, res) => {
 
     res.json(withBusinessName);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch your reviews", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch your reviews", error: err.message });
   }
 });
 
 // GET /api/reviews/owner/export - CSV report of every review across the owner's businesses
 router.get("/owner/export", auth, async (req, res) => {
   try {
-    const businesses = await Business.find({ owner: req.user.id }).select("_id name");
+    const businesses = await Business.find({ owner: req.user.id }).select(
+      "_id name",
+    );
     const businessIds = businesses.map((b) => b._id);
     const businessNameById = {};
     businesses.forEach((b) => (businessNameById[b._id.toString()] = b.name));
@@ -42,7 +48,16 @@ router.get("/owner/export", auth, async (req, res) => {
       .sort({ createdAt: -1 });
 
     const escapeCsv = (val) => `"${String(val ?? "").replace(/"/g, '""')}"`;
-    const header = ["Business", "Customer", "Rating", "Sentiment", "Review", "Keywords", "Owner Reply", "Date"];
+    const header = [
+      "Business",
+      "Customer",
+      "Rating",
+      "Sentiment",
+      "Review",
+      "Keywords",
+      "Owner Reply",
+      "Date",
+    ];
     const rows = reviews.map((r) => [
       businessNameById[r.business.toString()],
       r.user?.name || "Anonymous",
@@ -54,13 +69,20 @@ router.get("/owner/export", auth, async (req, res) => {
       new Date(r.createdAt).toISOString().slice(0, 10),
     ]);
 
-    const csv = [header, ...rows].map((row) => row.map(escapeCsv).join(",")).join("\n");
+    const csv = [header, ...rows]
+      .map((row) => row.map(escapeCsv).join(","))
+      .join("\n");
 
     res.setHeader("Content-Type", "text/csv");
-    res.setHeader("Content-Disposition", 'attachment; filename="feedback-nepal-reviews.csv"');
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="feedback-nepal-reviews.csv"',
+    );
     res.send(csv);
   } catch (err) {
-    res.status(500).json({ message: "Failed to export reviews", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to export reviews", error: err.message });
   }
 });
 
@@ -72,7 +94,9 @@ router.get("/business/:businessId", async (req, res) => {
       .sort({ createdAt: -1 });
     res.json(reviews);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch reviews", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch reviews", error: err.message });
   }
 });
 
@@ -81,7 +105,9 @@ router.post("/", auth, async (req, res) => {
   try {
     const { business, rating, text } = req.body;
     if (!business || !rating || !text) {
-      return res.status(400).json({ message: "Business, rating and text are required" });
+      return res
+        .status(400)
+        .json({ message: "Business, rating and text are required" });
     }
 
     const biz = await Business.findById(business);
@@ -103,7 +129,9 @@ router.post("/", auth, async (req, res) => {
     const populated = await review.populate("user", "name");
     res.status(201).json(populated);
   } catch (err) {
-    res.status(500).json({ message: "Failed to submit review", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to submit review", error: err.message });
   }
 });
 
@@ -120,7 +148,12 @@ router.delete("/:id", auth, async (req, res) => {
     }
 
     if (!isAuthor && !isBusinessOwner) {
-      return res.status(403).json({ message: "You can only delete your own review, or a review on a business you own" });
+      return res
+        .status(403)
+        .json({
+          message:
+            "You can only delete your own review, or a review on a business you own",
+        });
     }
 
     const businessId = review.business;
@@ -128,7 +161,9 @@ router.delete("/:id", auth, async (req, res) => {
     await recomputeBusinessStats(businessId);
     res.json({ message: "Review deleted" });
   } catch (err) {
-    res.status(500).json({ message: "Failed to delete review", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to delete review", error: err.message });
   }
 });
 
@@ -145,7 +180,9 @@ router.post("/:id/reply", auth, async (req, res) => {
 
     const business = await Business.findById(review.business).select("owner");
     if (!business || String(business.owner) !== req.user.id) {
-      return res.status(403).json({ message: "Only the business owner can reply to this review" });
+      return res
+        .status(403)
+        .json({ message: "Only the business owner can reply to this review" });
     }
 
     review.ownerReply = { text: text.trim(), repliedAt: new Date() };
@@ -154,7 +191,9 @@ router.post("/:id/reply", auth, async (req, res) => {
     const populated = await review.populate("user", "name");
     res.json(populated);
   } catch (err) {
-    res.status(500).json({ message: "Failed to save reply", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to save reply", error: err.message });
   }
 });
 
@@ -162,14 +201,19 @@ async function recomputeBusinessStats(businessId) {
   const reviews = await Review.find({ business: businessId });
   const reviewCount = reviews.length;
   const avgRating = reviewCount
-    ? Number((reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount).toFixed(2))
+    ? Number(
+        (reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount).toFixed(
+          2,
+        ),
+      )
     : 0;
 
   const sentimentSummary = { positive: 0, neutral: 0, negative: 0 };
   const keywordFreq = {};
 
   reviews.forEach((r) => {
-    sentimentSummary[r.sentiment.label] = (sentimentSummary[r.sentiment.label] || 0) + 1;
+    sentimentSummary[r.sentiment.label] =
+      (sentimentSummary[r.sentiment.label] || 0) + 1;
     (r.keywords || []).forEach((kw) => {
       keywordFreq[kw] = (keywordFreq[kw] || 0) + 1;
     });

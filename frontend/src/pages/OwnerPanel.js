@@ -23,11 +23,15 @@ export default function OwnerPanel() {
     totalBusinesses: businesses.length,
     totalReviews: reviews.length,
     avgRating: businesses.length
-      ? (businesses.reduce((s, b) => s + (b.avgRating || 0), 0) / businesses.length).toFixed(2)
+      ? (
+          businesses.reduce((s, b) => s + (b.avgRating || 0), 0) /
+          businesses.length
+        ).toFixed(2)
       : "—",
   };
 
-  const handleReplyChange = (id, value) => setReplyDrafts({ ...replyDrafts, [id]: value });
+  const handleReplyChange = (id, value) =>
+    setReplyDrafts({ ...replyDrafts, [id]: value });
 
   const submitReply = async (reviewId) => {
     const text = (replyDrafts[reviewId] || "").trim();
@@ -60,7 +64,9 @@ export default function OwnerPanel() {
   const exportCsv = async () => {
     setExporting(true);
     try {
-      const res = await api.get("/reviews/owner/export", { responseType: "blob" });
+      const res = await api.get("/reviews/owner/export", {
+        responseType: "blob",
+      });
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement("a");
       link.href = url;
@@ -80,7 +86,10 @@ export default function OwnerPanel() {
     <div className="fn-page">
       <p className="fn-eyebrow-plain">Owner panel</p>
       <h1>Your businesses</h1>
-      <p className="fn-muted">View every review across your businesses, reply publicly, and export a full report.</p>
+      <p className="fn-muted">
+        View every review across your businesses, reply publicly, and export a
+        full report.
+      </p>
 
       <section className="fn-stat-row">
         <div className="fn-stat-card">
@@ -102,19 +111,27 @@ export default function OwnerPanel() {
       <section className="fn-panel">
         <div className="fn-panel-header-row">
           <h2>Your listings</h2>
-          <Link to="/add-business" className="fn-btn fn-btn-ghost">List another business</Link>
+          <Link to="/add-business" className="fn-btn fn-btn-ghost">
+            List another business
+          </Link>
         </div>
-        {businesses.length === 0 && <p className="fn-muted">You haven't listed a business yet.</p>}
+        {businesses.length === 0 && (
+          <p className="fn-muted">You haven't listed a business yet.</p>
+        )}
         <div className="fn-list">
           {businesses.map((b) => (
             <div className="fn-biz-row" key={b._id}>
               <div className="fn-biz-row-main">
                 <h3>{b.name}</h3>
-                <p className="fn-muted">{b.category} &middot; {b.city || "Nepal"}</p>
+                <p className="fn-muted">
+                  {b.category} &middot; {b.city || "Nepal"}
+                </p>
               </div>
               <div className="fn-biz-row-meta">
                 <StarRating value={b.avgRating} />
-                <Link to={`/dashboard/${b._id}`} className="fn-link-quiet">Full AI insights &rarr;</Link>
+                <Link to={`/dashboard/${b._id}`} className="fn-link-quiet">
+                  Full AI insights &rarr;
+                </Link>
               </div>
             </div>
           ))}
@@ -124,18 +141,25 @@ export default function OwnerPanel() {
       <section className="fn-panel">
         <div className="fn-panel-header-row">
           <h2>All reviews ({reviews.length})</h2>
-          <button className="fn-btn fn-btn-ghost" onClick={exportCsv} disabled={exporting || reviews.length === 0}>
+          <button
+            className="fn-btn fn-btn-ghost"
+            onClick={exportCsv}
+            disabled={exporting || reviews.length === 0}
+          >
             {exporting ? "Preparing..." : "Export CSV report"}
           </button>
         </div>
 
-        {reviews.length === 0 && <p className="fn-muted">No reviews yet across your businesses.</p>}
+        {reviews.length === 0 && (
+          <p className="fn-muted">No reviews yet across your businesses.</p>
+        )}
 
         {reviews.map((r) => (
           <article className="fn-review-card" key={r._id}>
             <div className="fn-review-top">
               <div>
-                <strong>{r.businessName}</strong> &middot; <span className="fn-muted">{r.user?.name || "Anonymous"}</span>
+                <strong>{r.businessName}</strong> &middot;{" "}
+                <span className="fn-muted">{r.user?.name || "Anonymous"}</span>
                 <StarRating value={r.rating} size={16} />
               </div>
               <SentimentBadge label={r.sentiment?.label} />
@@ -143,7 +167,11 @@ export default function OwnerPanel() {
             <p>{r.text}</p>
             {r.keywords?.length > 0 && (
               <div className="fn-keyword-row">
-                {r.keywords.map((k) => <span className="fn-tag fn-tag-sm" key={k}>{k}</span>)}
+                {r.keywords.map((k) => (
+                  <span className="fn-tag fn-tag-sm" key={k}>
+                    {k}
+                  </span>
+                ))}
               </div>
             )}
 
@@ -161,13 +189,21 @@ export default function OwnerPanel() {
                   value={replyDrafts[r._id] || ""}
                   onChange={(e) => handleReplyChange(r._id, e.target.value)}
                 />
-                <button className="fn-btn fn-btn-ghost" onClick={() => submitReply(r._id)} disabled={busyId === r._id}>
+                <button
+                  className="fn-btn fn-btn-ghost"
+                  onClick={() => submitReply(r._id)}
+                  disabled={busyId === r._id}
+                >
                   {busyId === r._id ? "Saving..." : "Post reply"}
                 </button>
               </div>
             )}
 
-            <button className="fn-link-danger" onClick={() => deleteReview(r._id)} disabled={busyId === r._id}>
+            <button
+              className="fn-link-danger"
+              onClick={() => deleteReview(r._id)}
+              disabled={busyId === r._id}
+            >
               Remove review
             </button>
           </article>
